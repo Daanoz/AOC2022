@@ -1,0 +1,58 @@
+<html>
+<head>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript">
+        const canvas = document.getElementById('canvas');
+        canvas.width  = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        let resizeTimeout;
+        window.onresize = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                canvas.width  = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+                drawOnCanvas();
+            }, 500);
+        }
+        const ctx = canvas.getContext('2d', { alpha: true });
+
+        let latestData = [];
+        const drawOnCanvas = () => {
+            latestData.forEach(item => {
+                switch(item.type) {
+                    case 'FUNC': {
+                        ctx[item.identifier](...item.args);
+                    } break;
+                    case 'PROP': {
+                        ctx[item.identifier] = item.args[0];
+                    } break;
+                    case 'CLEAR': {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    } break;
+                }
+            });
+        }
+
+        const setupSocket = () => {
+            const webSocket = new WebSocket('ws://localhost:9898');
+            webSocket.onmessage = (event) => {
+                try {
+                    latestData = JSON.parse(event.data);
+                    drawOnCanvas();
+                } catch (e) { console.log("Failed to read JSON", e); }
+            };
+            webSocket.onopen = function(e) {
+                console.log("Connection established!");
+            };
+            webSocket.onclose = () => setTimeout(setupSocket, 100);
+        }
+        setupSocket();
+    </script>
+</body>
+</html>
