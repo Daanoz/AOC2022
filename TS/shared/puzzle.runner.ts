@@ -81,7 +81,7 @@ const getInputData = (puzzleDir: string, inputFile?: string): Promise<string> =>
     if (!process.env.AOC_SESSION) {
         return Promise.reject('AOC_SESSION not set in env')
     }
-    const YEAR = '2021'
+    const YEAR = '2022'
     return new Promise<string>((resolve, reject) => {
         const options = {
             hostname: 'adventofcode.com',
