@@ -1,6 +1,6 @@
 import {PuzzleSolution} from './index'
 
-describe('Puzzle TEMPLATE', () => {
+describe('Puzzle 01', () => {
     let solution: PuzzleSolution
     beforeEach(() => {
         solution = new PuzzleSolution()
