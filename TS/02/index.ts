@@ -1,4 +1,4 @@
-import { Puzzle, Runner, BasePuzzle, Result } from '../shared';
+import { Puzzle, Runner, BasePuzzle, Result } from '../shared'
 
 const LOSS_SCORE = 0
 const DRAW_SCORE = 3
@@ -13,7 +13,7 @@ export class PuzzleSolution extends BasePuzzle implements Puzzle {
     ['A', ROCK],
     ['B', PAPER],
     ['C', SCISSORS],
-  ]);
+  ])
 
   public run(): Result {
     const result: Result = {}

@@ -9,9 +9,9 @@ export interface GridCell {
 }
 
 export class EndlessGrid<T extends string | GridCell> {
-    private grid: Map<number, Map<number, T>> = new Map();
-    private xRange: [number, number] = [0, 0];
-    private yRange: [number, number] = [0, 0];
+    private grid: Map<number, Map<number, T>> = new Map()
+    private xRange: [number, number] = [0, 0]
+    private yRange: [number, number] = [0, 0]
 
     constructor() {}
 

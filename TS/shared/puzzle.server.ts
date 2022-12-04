@@ -1,18 +1,18 @@
 import WebSocket from 'ws'
 
 export class PuzzleServer {
-    private server: WebSocket.Server;
-    private sockets: WebSocket[] = [];
-    private lastFlush?: string;
+    private server: WebSocket.Server
+    private sockets: WebSocket[] = []
+    private lastFlush?: string
 
     private buffer: {
         type: 'PROP'|'FUNC'|'CLEAR',
         identifier: string,
         args: unknown[]
-    }[] = [];
+    }[] = []
 
-    private firstRenderPromise: Promise<boolean>;
-    private firstRenderResolve?: (value: boolean) => void;
+    private firstRenderPromise: Promise<boolean>
+    private firstRenderResolve?: (value: boolean) => void
 
     constructor() {
         this.server = new WebSocket.Server({

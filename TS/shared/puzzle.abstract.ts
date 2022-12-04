@@ -3,9 +3,9 @@ import { PuzzleRenderer } from './puzzle.renderer'
 import { PuzzleServer } from './puzzle.server'
 
 export abstract class BasePuzzle {
-    private timings: Map<string, {start: number, end: number, duration: number}> = new Map();
+    private timings: Map<string, {start: number, end: number, duration: number}> = new Map()
     private input = ''
-    protected render: PuzzleRenderer;
+    protected render: PuzzleRenderer
 
     constructor(renderServer?: PuzzleServer) {
         this.render = new PuzzleRenderer(renderServer)
