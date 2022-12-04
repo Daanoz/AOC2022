@@ -1,6 +1,7 @@
 import {PuzzleSolution} from './index'
+import path from 'path'
 
-describe('Puzzle TEMPLATE', () => {
+describe(`Puzzle ${__dirname.split(path.sep).pop()}`, () => {
     let solution: PuzzleSolution
     beforeEach(() => {
         solution = new PuzzleSolution()
