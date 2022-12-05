@@ -12,7 +12,7 @@ export abstract class BasePuzzle {
     }
 
     public setInput(data: string): void {
-        this.input = data.trim()
+        this.input = data
     }
     protected getInput(): string {
         return this.input
