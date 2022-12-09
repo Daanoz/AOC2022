@@ -155,6 +155,40 @@ export class EndlessGrid<T extends string | GridCell> {
         return mappedGrid
     }
 
+    public mapRows<T2>(callbackfn: (value: (T | undefined)[], index: number) => T2): T2[] {
+        const mappedRows: T2[] = []
+        for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
+            const row: (T | undefined)[] = []
+            for(let x = this.xRange[0]; x <= this.xRange[1]; x++) {
+                if (this.has(x, y)) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    row.push(this.get(x, y)!)
+                } else {
+                    row.push(undefined)
+                }
+            }
+            mappedRows.push(callbackfn(row, y))
+        }
+        return mappedRows
+    }
+
+    public mapColumns<T2>(callbackfn: (value: (T | undefined)[], index: number) => T2): T2[] {
+        const mappedColumns: T2[] = []
+        for(let x = this.xRange[0]; x <= this.xRange[1]; x++) {
+            const column: (T | undefined)[] = []
+            for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
+                if (this.has(x, y)) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    column.push(this.get(x, y)!)
+                } else {
+                    column.push(undefined)
+                }
+            }
+            mappedColumns.push(callbackfn(column, x))
+        }
+        return mappedColumns
+    }
+
     public filterRow(y: number, callbackfn: (value: T, index: [number, number]) => boolean): T[] {
         const results: T[] = []
         if (this.grid.has(y)) {
