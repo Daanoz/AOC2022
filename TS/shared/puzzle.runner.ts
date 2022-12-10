@@ -36,10 +36,10 @@ export const Runner = (PuzzleClass: Constructor<Puzzle>): void => {
         const resultPromises: Promise<void | boolean>[] = []
         if (result) {
             if (result.a) {
-                resultPromises.push(asPromise(result.a).then(res => console.log('Part A', res)))
+                resultPromises.push(asPromise(result.a).then(res => logResult('Part A', res)))
             }
             if (result.b) {
-                resultPromises.push(asPromise(result.b).then(res => console.log('Part B', res)))
+                resultPromises.push(asPromise(result.b).then(res => logResult('Part B', res)))
             }
         }
         const complete = () => {
@@ -63,6 +63,14 @@ const asPromise = (val: string | number | Promise<string | number | void>) => {
         return val
     } else {
         return Promise.resolve(val)
+    }
+}
+
+const logResult = (key: string, val: string | number | void) => {
+    if (typeof val === 'string' && val.includes('\n')) {
+        console.log(key, '\n' + val)
+    } else {
+        console.log(key, val)
     }
 }
 
