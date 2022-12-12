@@ -46,6 +46,13 @@ export class EndlessGrid<T extends string | GridCell> {
         return cell === undefined ? defaultValue : cell
     }
 
+    public getByIndex(index: [number, number]): T | undefined;
+    public getByIndex(index: [number, number], defaultValue: T | undefined): T;
+    public getByIndex(index: [number, number], defaultValue: string): string;
+    public getByIndex(index: [number, number], defaultValue?: T | string): T | undefined | string {
+       return this.get(index[0], index[1], defaultValue as T | undefined)
+    }
+
     public getNeighborsIndexes(x: number, y: number, opts?: { includeDiagonals?: boolean, onlyDefined?: boolean }): [number, number][] {
         let coordinates: [number, number][] = [ [x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y] ]
         if (opts?.includeDiagonals) {
