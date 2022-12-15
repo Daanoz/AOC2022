@@ -10,8 +10,8 @@ export interface GridCell {
 
 export class EndlessGrid<T extends string | GridCell> {
     private grid: Map<number, Map<number, T>> = new Map()
-    private xRange: [number, number] = [0, 0]
-    private yRange: [number, number] = [0, 0]
+    private xRange: [number, number] = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
+    private yRange: [number, number] = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
 
     constructor() {}
 
@@ -308,18 +308,14 @@ export class EndlessGrid<T extends string | GridCell> {
         for(let y = this.yRange[1]; y >= (this.yRange[0]); y--) {
             let row = ''
             for(let x = this.xRange[0]; x <= (this.xRange[1]); x++) {
+                const pos: [number, number] = [
+                    reversed ? this.xRange[1] - (x - this.xRange[0]) : x, 
+                    upsideDown ? this.yRange[1] - (y - this.yRange[0]) : y
+                ]
                 if (cellToString) {
-                    const pos: [number, number] = [
-                        reversed ? this.xRange[0] - (this.xRange[0] - x) : x, 
-                        upsideDown ? this.yRange[1] - (this.yRange[1] - y) : y
-                    ]
-                    row += cellToString(this.get(pos[0], pos[1]), pos)
+                    row += cellToString(this.getByIndex(pos), pos)
                 } else {
-                    const cell = this.get(
-                        reversed ? this.xRange[0] - (this.xRange[0] - x) : x, 
-                        upsideDown ? this.yRange[1] - (this.yRange[1] - y) : y, 
-                        defaultValue
-                    )
+                    const cell = this.getByIndex(pos, defaultValue)
                     if (typeof cell === 'string') {
                         row += cell
                     } else {
