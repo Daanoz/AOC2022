@@ -1,4 +1,3 @@
-import path from 'path'
 import { Puzzle, Runner, BasePuzzle, Result } from '../shared'
 
 class Node {
