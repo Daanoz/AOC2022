@@ -17,30 +17,34 @@ export abstract class BasePuzzle {
     protected getInput(): string {
         return this.input
     }
-    protected getInputAsRows(splitBy?: string | RegExp): string[] {
-        return this.getInput().trim().split(splitBy === undefined ? /\r\n|\n|\r/ : splitBy)
+    protected getInputAsRows(splitBy?: string | RegExp, skipTrimInput = false): string[] {
+        return (skipTrimInput ? this.getInput() : this.getInput().trim()).split(splitBy === undefined ? /\r\n|\n|\r/ : splitBy)
     }
     protected getInputAsTable<T = string>(parser?: { 
         splitByCol?: string | RegExp, 
         splitByRow?: string | RegExp,
-        cellParser?: (value: string) => T
+        cellParser?: (value: string) => T,
+        skipTrimInput?: boolean
     }): T[][] {
         const {
             splitByCol,
             splitByRow,
             cellParser = (value: string) => value as unknown as T
         } = parser || {}
-        return this.getInputAsRows(splitByRow).map(row => row.split(splitByCol === undefined ? ',': splitByCol).map(cellParser))
+        return this.getInputAsRows(splitByRow, parser?.skipTrimInput).map(row => row.split(splitByCol === undefined ? ',': splitByCol).map(cellParser))
     }
     protected getInputAsGrid<T extends string | GridCell>(options?: { 
         splitByCol?: string | RegExp, 
         splitByRow?: string | RegExp,
         cellParser?: (value: string) => T,
+        skipTrimInput?: boolean
+        content?: () => T[][],
         reversed?: boolean
     }): EndlessGrid<T> {
-        const { reversed = true, ...parser } = options || {}
+        const { reversed = true, content, ...parser } = options || {}
+        const gridContent = content ?? (() => this.getInputAsTable(parser))
         const grid = new EndlessGrid<T>()
-        this.getInputAsTable(parser).forEach((row, y) => row.forEach((cell, x) => grid.set(x, y * (reversed ? -1 : 1), cell)))
+        gridContent().forEach((row, y) => row.forEach((cell, x) => grid.set(x, y * (reversed ? -1 : 1), cell)))
         return grid
     }
 

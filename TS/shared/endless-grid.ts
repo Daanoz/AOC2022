@@ -91,7 +91,7 @@ export class EndlessGrid<T extends string | GridCell> {
         return results
     }
 
-    public getColumn(x: number): T[] {
+    public getColumn(x: number, upsideDown?: boolean): T[] {
         const results: T[] = []
         for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
             if (this.has(x, y)) {
@@ -99,7 +99,7 @@ export class EndlessGrid<T extends string | GridCell> {
                 results.push(this.get(x, y)!)
             }
         }
-        return results
+        return upsideDown ? results.reverse() : results
     }
 
     public has(x: number, y: number): boolean {
