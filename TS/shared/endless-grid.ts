@@ -113,8 +113,8 @@ export class EndlessGrid<T extends string | GridCell> {
         , 0)
     }
 
-    public countBy(callbackfn: (value: T, index: [number, number]) => boolean): number {
-        return this.filter(callbackfn).length
+    public countBy(callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): number {
+        return this.filter(callbackfn, defaultValue).length
     }
 
 
@@ -196,13 +196,13 @@ export class EndlessGrid<T extends string | GridCell> {
         return mappedColumns
     }
 
-    public filterRow(y: number, callbackfn: (value: T, index: [number, number]) => boolean): T[] {
+    public filterRow(y: number, callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): T[] {
         const results: T[] = []
         if (this.grid.has(y)) {
             for(let x = this.xRange[0]; x <= this.xRange[1]; x++) {
-                if (this.has(x, y)) {
+                if (this.has(x, y) || defaultValue) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    const cell = this.get(x, y)!
+                    const cell = this.get(x, y, defaultValue)!
                     if (callbackfn(cell, [x, y])) {
                         results.push(cell)
                     }
@@ -212,12 +212,12 @@ export class EndlessGrid<T extends string | GridCell> {
         return results
     }
 
-    public filterColumn(x: number, callbackfn: (value: T, index: [number, number]) => boolean): T[] {
+    public filterColumn(x: number, callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): T[] {
         const results: T[] = []
         for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
-            if (this.has(x, y)) {
+            if (this.has(x, y) || defaultValue) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const cell = this.get(x, y)!
+                const cell = this.get(x, y, defaultValue)!
                 if (callbackfn(cell, [x, y])) {
                     results.push(cell)
                 }
@@ -226,13 +226,13 @@ export class EndlessGrid<T extends string | GridCell> {
         return results
     }
 
-    public filter(callbackfn: (value: T, index: [number, number]) => boolean): T[] {
+    public filter(callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): T[] {
         const results: T[] = []
         for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
             for(let x = this.xRange[0]; x <= this.xRange[1]; x++) {
-                if (this.has(x, y)) {
+                if (this.has(x, y) || defaultValue) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    const cell = this.get(x, y)!
+                    const cell = this.get(x, y, defaultValue)!
                     if (callbackfn(cell, [x, y])) {
                         results.push(cell)
                     }
@@ -242,13 +242,13 @@ export class EndlessGrid<T extends string | GridCell> {
         return results
     }
 
-    public filterIndex(callbackfn: (value: T, index: [number, number]) => boolean): [number, number][] {
+    public filterIndex(callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): [number, number][] {
         const results: [number, number][] = []
         for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
             for(let x = this.xRange[0]; x <= this.xRange[1]; x++) {
-                if (this.has(x, y)) {
+                if (this.has(x, y) || defaultValue) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    const cell = this.get(x, y)!
+                    const cell = this.get(x, y, defaultValue)!
                     if (callbackfn(cell, [x, y])) {
                         results.push([x, y])
                     }
@@ -258,12 +258,28 @@ export class EndlessGrid<T extends string | GridCell> {
         return results
     }
 
-    public findIndex(callbackfn: (value: T, index: [number, number]) => boolean): [number, number] | undefined {
+    public filterCellAndIndex(callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): ([number, number, T])[] {
+        const results: [number, number, T][] = []
         for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
             for(let x = this.xRange[0]; x <= this.xRange[1]; x++) {
-                if (this.has(x, y)) {
+                if (this.has(x, y) || defaultValue) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    const cell = this.get(x, y)!
+                    const cell = this.get(x, y, defaultValue)!
+                    if (callbackfn(cell, [x, y])) {
+                        results.push([x, y, cell])
+                    }
+                }
+            }
+        }
+        return results
+    }
+
+    public findIndex(callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): [number, number] | undefined {
+        for(let y = this.yRange[1]; y >= this.yRange[0]; y--) {
+            for(let x = this.xRange[0]; x <= this.xRange[1]; x++) {
+                if (this.has(x, y) || defaultValue) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const cell = this.get(x, y, defaultValue)!
                     if (callbackfn(cell, [x, y])) {
                         return [x, y]
                     }
@@ -273,11 +289,11 @@ export class EndlessGrid<T extends string | GridCell> {
         return undefined
     }
 
-    public find(callbackfn: (value: T, index: [number, number]) => boolean): T | undefined {
-        const index = this.findIndex(callbackfn)
+    public find(callbackfn: (value: T, index: [number, number]) => boolean, defaultValue?: T): T | undefined {
+        const index = this.findIndex(callbackfn, defaultValue)
         if (index) { 
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return this.get(index[0], index[1])! 
+            return this.get(index[0], index[1], defaultValue)! 
         }
         return undefined
     }
