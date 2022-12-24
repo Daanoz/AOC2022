@@ -1,7 +1,6 @@
 import { Puzzle, Runner, BasePuzzle, Result, EndlessGrid } from '../shared'
 
 const OPEN = '.'
-const WALL = '#'
 const VOID = ' '
 
 enum Direction {
