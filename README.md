@@ -11,3 +11,7 @@ AdventOfCode2022, join the fun [Advent of code](http://adventofcode.com)
 ## TypeScript
 
 View [readme.md](TS/readme.md) in TS folder 
+
+## Rust
+
+View [readme.md](rust/readme.md) in rust folder 
